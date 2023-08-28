@@ -134,7 +134,8 @@ int main(int argc, char *argv[])
   int warningrx = 0, warningtx = 0, criticalrx = 0, criticaltx = 0;
   int divisor = 1024;
   char *envvar = NULL;
-  char *label = "";
+  char *rx_label = "";
+  char *tx_label = "";
 
   envvar = getenv("USE_BITS");
   if (envvar && *envvar == '1')
@@ -168,7 +169,13 @@ int main(int argc, char *argv[])
     divisor = 1000;
   envvar = getenv("LABEL");
   if (envvar)
-    label = envvar;
+    rx_label = envvar;
+  envvar = getenv("RX_LABEL");
+  if (envvar)
+    rx_label = envvar;
+  envvar = getenv("TX_LABEL");
+  if (envvar)
+    tx_label = envvar;
 
   while (c = getopt(argc, argv, "bBsht:i:w:c:"), c != -1) {
     switch (c) {
@@ -211,9 +218,9 @@ int main(int argc, char *argv[])
 
     rx = (received - received_old) / (float)(s - s_old);
     tx = (sent - sent_old) / (float)(s - s_old);
-    printf("%s", label);
+    printf("%s", rx_label);
     display(unit, divisor, rx, warningrx, criticalrx);
-    printf(" ");
+    printf("  %s", tx_label);
     display(unit, divisor, tx, warningtx, criticaltx);
     printf("\n");
     fflush(stdout);
